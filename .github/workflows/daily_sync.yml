@@ -15,6 +15,8 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -26,10 +28,8 @@ jobs:
 
       - name: Install dependencies
         run: pip install -e .
-        working-directory: backend
 
       - name: Run sync
-        working-directory: backend
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
