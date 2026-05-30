@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from bde_client import fetch_euribor_12m
-from repository import get_client, latest_date, upsert_rates
+from repository import get_client, latest_date, refresh_stats, upsert_rates
 
 EURIBOR_START_YEAR = 1998  # first Euribor published 1998-12-30
 
@@ -28,6 +28,7 @@ def sync_daily(dry_run: bool = False) -> None:
         return
 
     n = upsert_rates(client, records)
+    refresh_stats(client)
     print(f"Upserted {n} records. Latest: {latest_date(client)}")
 
 
@@ -50,6 +51,7 @@ def backfill(dry_run: bool = False) -> None:
         time.sleep(0.5)
 
     if not dry_run:
+        refresh_stats(client)
         print(f"\nBackfill complete — {total} total records. Latest: {latest_date(client)}")
 
 

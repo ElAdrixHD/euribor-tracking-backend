@@ -28,6 +28,11 @@ def monthly_averages(client: Client, limit: int = 12) -> list[dict]:
     return result.data
 
 
+def refresh_stats(client: Client) -> None:
+    """Recompute and cache Euribor stats after a data upsert."""
+    client.rpc("refresh_euribor_stats").execute()
+
+
 def latest_date(client: Client) -> str | None:
     result = (
         client.table("euribor_rates")
