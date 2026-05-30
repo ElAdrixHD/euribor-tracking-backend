@@ -2,8 +2,8 @@ name: Daily Euribor Sync
 
 on:
   schedule:
-    # 9:00 UTC Mon–Fri (BDE publishes at ~08:15 UTC)
-    - cron: "0 9 * * 1-5"
+    # 9:00 UTC every day
+    - cron: "0 9 * * *"
   workflow_dispatch:
     inputs:
       backfill:
