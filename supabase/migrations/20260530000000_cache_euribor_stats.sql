@@ -357,7 +357,7 @@ CREATE OR REPLACE FUNCTION get_euribor_stats()
 RETURNS jsonb
 LANGUAGE sql
 STABLE
-SECURITY INVOKER
+SECURITY DEFINER
 AS $$
     SELECT data FROM euribor_stats_cache WHERE id = 1;
 $$;
