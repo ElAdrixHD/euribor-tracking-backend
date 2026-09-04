@@ -367,30 +367,6 @@
 
   REVOKE ALL ON FUNCTION refresh_euribor_stats() FROM anon, authenticated;
   GRANT EXECUTE ON FUNCTION refresh_euribor_stats() TO service_role;
-  LANGUAGE sql
-  STABLE
-  SECURITY DEFINER
-  AS $$
-      SELECT data FROM euribor_stats_cache WHERE id = 1;
-  $$;
-
-  GRANT EXECUTE ON FUNCTION get_euribor_stats() TO anon, authenticated, service_role;
-
-  -- Función de refresco
-  CREATE OR REPLACE FUNCTION refresh_euribor_stats()
-  RETURNS void
-  LANGUAGE sql
-  SECURITY DEFINER
-  AS $$
-      INSERT INTO euribor_stats_cache (id, data, refreshed_at)
-      VALUES (1, _compute_euribor_stats(), now())
-      ON CONFLICT (id) DO UPDATE
-          SET data         = EXCLUDED.data,
-              refreshed_at = EXCLUDED.refreshed_at;
-  $$;
-
-  REVOKE ALL ON FUNCTION refresh_euribor_stats() FROM anon, authenticated;
-  GRANT EXECUTE ON FUNCTION refresh_euribor_stats() TO service_role;
 
   -- Rellena/actualiza la caché ahora mismo
   SELECT refresh_euribor_stats();
