@@ -24,8 +24,10 @@ def _execute_with_retry(fn: Callable[[], T], max_retries: int = 3, delay: float 
 
 
 def get_client() -> Client:
-    url = os.environ["SUPABASE_URL"]
-    key = os.environ["SUPABASE_KEY"]
+    # .strip() guards against trailing newline/whitespace in secrets (e.g. GitHub Actions
+    # secrets pasted with a trailing \n), which httpx rejects as an illegal header value.
+    url = os.environ["SUPABASE_URL"].strip()
+    key = os.environ["SUPABASE_KEY"].strip()
     # Force HTTP/1.1: httpx HTTP/2 has known stream disconnect issues with Cloudflare/Supabase in CI environments
     http_client = httpx.Client(http2=False, timeout=30.0)
     options = ClientOptions(httpx_client=http_client)
